@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-# TODO: https://raw.githubusercontent.com/thepinguim/images/master/icons/
-#         by: https://raw.githubusercontent.com/terroo/app-get/master/icons/
 
 shopt -s extglob
 
@@ -117,7 +115,7 @@ chmod + "${HOME}/.local/share/applications/$1.desktop"
 
 _image(){
   [[ "$(sed -n "/$1/p" "$_in" | awk '{ print $8 }')" != "true" ]] && {
-      _url_image="https://raw.githubusercontent.com/thepinguim/images/master/icons/$1.png"
+      _url_image="https://raw.githubusercontent.com/terroo/app-get/master/data/icons/hicolor/256x256/$1.png"
       [[ ! -d "${HOME}/.local/share/icons/hicolor/256x256/apps" ]] && mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps
       wget -q $_url_image -O "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png"
       _desktop "$1"

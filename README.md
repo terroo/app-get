@@ -46,7 +46,8 @@ Exemplo para o programa `FooBar`:
 foobar FooBar Utility;Graphics 1.0 https://github.com/foobar/FooBar.AppImage https://foobar.net false
 ```
 > Add only those that you have tested on your machine.
-5. Submit a [Pull Request](https://bit.ly/prenlink)
+5. Add a program icon in **PNG** format with **256x256** resolution to the directory: `data/icons/hicolor/256x256`
+6. Submit a [Pull Request](https://bit.ly/prenlink)
 
 ## Report bugs
 <https://github.com/terroo/app-get/issues>
