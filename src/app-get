@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.8-alpha
+# version: 1.9-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -124,6 +124,7 @@ _image(){
 
 _turn_exec(){
   [[ ! -d "${HOME}/.local/bin/app" ]] && mkdir -p ${HOME}/.local/bin/app
+  sleep 3
   cp /tmp/"$1" ${HOME}/.local/bin/app/
   chmod +x "${HOME}/.local/bin/app/$1"
 }
@@ -153,15 +154,27 @@ _down_pkg(){
 
   echo -en "         👉 Getting the App " "\r"
   setterm -cursor off
+  if [[ -f "/tmp/${1}" ]]; then
+      while	    
+	        [[ ! $(grep 'Done' "$_tmp") ]] && wget -c -b $2 -O /tmp/"$1" | sed -r '/Continuando|escrita|Continuing|writing\
+	        |escribiendo|Continua|scrittura|Kontynuacja|pisania|Продолжая|писать|Weiter|schreiben|繼續|寫作|続ける|書く|Fortsætter|skrivning\
+	        |Doorgaan|schrijven|继续|写作|Continuer|écrire|Nastavak|pisanja/d'
+	    do
+	        _progress
+      done
+  else
+      while	    
+	        [[ ! $(grep 'Done' "$_tmp") ]] && wget -b $2 -O /tmp/"$1" | sed -r '/Continuando|escrita|Continuing|writing\
+	        |escribiendo|Continua|scrittura|Kontynuacja|pisania|Продолжая|писать|Weiter|schreiben|繼續|寫作|続ける|書く|Fortsætter|skrivning\
+	        |Doorgaan|schrijven|继续|写作|Continuer|écrire|Nastavak|pisanja/d'
+	    do
+	        _progress
+      done
+  fi
   
-  while	    
-	    [[ ! $(grep 'Done' "$_tmp") ]] && wget -c -b $2 -O /tmp/"$1" | sed -r '/Continuando|escrita|Continuing|writing\
-	    |escribiendo|Continua|scrittura|Kontynuacja|pisania|Продолжая|писать|Weiter|schreiben|繼續|寫作|続ける|書く|Fortsætter|skrivning\
-	    |Doorgaan|schrijven|继续|写作|Continuer|écrire|Nastavak|pisanja/d'
-	do
-	    _progress
-  done
   setterm -cursor on
+  sleep 2
+  
 }
 
 _is_path(){
