@@ -42,7 +42,7 @@ vim up-app-get/lib/apps.list
 |---|---|---|---|---|---|---|
 | application command | name (usually with capital letters) | Category based on .desktop | Program version | AppImage link, use only the official project link, preferably from a Git repository | Inform the official website of the program | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
 
-Exemplo para o programa `FooBar`:
+Example for the `FooBar` program:
 ```sh
 foobar FooBar Utility;Graphics 1.0 https://github.com/foobar/FooBar.AppImage https://foobar.net false
 ```
