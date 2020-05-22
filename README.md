@@ -37,6 +37,7 @@ git clone https://github.com/[YOUR_USER]/app-get up-app-get
 vim up-app-get/lib/apps.list
 ```
 4. This file has data separated by spaces per line. And each field has a certain information:
+
 | command | name | category | version | AppImage link | website | icon/.desktop automatic
 |---|---|---|---|---|---|---|
 | application command | name (usually with capital letters) | Category based on .desktop | Link do AppImage, use somente do link oficial do projeto, de preferência de algum repositório Git | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
