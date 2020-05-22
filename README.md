@@ -40,7 +40,7 @@ vim up-app-get/lib/apps.list
 
 | command | name | category | version | AppImage link | website | icon/.desktop automatic
 |---|---|---|---|---|---|---|
-| application command | name (usually with capital letters) | Category based on .desktop | Link do AppImage, use somente do link oficial do projeto, de preferência de algum repositório Git | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
+| application command | name (usually with capital letters) | Category based on .desktop | Program version | AppImage link, use only the official project link, preferably from a Git repository | Inform the official website of the program | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
 
 Exemplo para o programa `FooBar`:
 ```sh
