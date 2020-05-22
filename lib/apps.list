@@ -8,5 +8,5 @@ inkscape Inkscape Utility;Graphics 1.0-alpha 64 https://bit.ly/inkscapeappd#git.
 kdenlive KDEnLive Utility;Video;Graphics 20.04.1 64 https://bit.ly/kdenliveappd#git.io https://kdenlive.org/ false
 olive Olive Utility;Video;Graphics 1.0 64 https://git.io/oliveapp https://www.olivevideoeditor.org/ false
 opera Opera WebBrowser 1.0 64 https://git.io/operaapp https://www.opera.com/ false
-qbittorrent qBitTorrent Utility;Torrent 4.2.1.10 64 https://git.io/qbittorrent https://www.qbittorrent.org/ false
+qbittorrent qBitTorrent Utility;Torrent 4.2.1.10 64 https://git.io/qbtp2p https://www.qbittorrent.org/ false
 upterm UpTerm Terminal 0.4.3 64 https://git.io/upterm https://github.com/railsware/upterm true
