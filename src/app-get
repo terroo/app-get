@@ -327,8 +327,9 @@ _update(){
     [[ $(sed -n '/^# version/p' $0) != $(tail -n 1 "/tmp/up_app_get") ]] && {
         printf "%s\n" "A new version is available!"
         printf "%s\n" "Its version is $(_e 31 0)${_tv}$(_e 99 1), the new version is $(_e 32 0)${_nv}$(_e 99 1) ."
-        read -p "Do you want to update now? [Y/y]: "
+        read -p "Do you want to update now? [Y/n]: "
         [[ "${REPLY}" == @(Y|y) ]] && {
+            [[ -d "/tmp/up-app-get" ]] && rm -rf "/tmp/up-app-get"
             git clone https://github.com/terroo/app-get /tmp/up-app-get
             cd /tmp/up-app-get
             bash INSTALL
