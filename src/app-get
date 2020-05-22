@@ -327,14 +327,17 @@ _update(){
     [[ $(sed -n '/^# version/p' $0) != $(tail -n 1 "/tmp/up_app_get") ]] && {
         printf "%s\n" "A new version is available!"
         printf "%s\n" "Its version is $(_e 31 0)${_tv}$(_e 99 1), the new version is $(_e 32 0)${_nv}$(_e 99 1) ."
-        read -p "Do you want to update now? [Y/n]: "
-        [[ "${REPLY}" != @(Y|y) ]] && {
+        read -p "Do you want to update now? [Y/y]: "
+        [[ "${REPLY}" == @(Y|y) ]] && {
             git clone https://github.com/terroo/app-get /tmp/up-app-get
             cd /tmp/up-app-get
             bash INSTALL
             cd -
             printf "%s\n" "Successfully updated. Run: source ~/.bashrc"
+            exit 0
         }
+    } || {
+        printf "%s\n" "${0##*/} is updated."
     }
     
 }
@@ -346,7 +349,7 @@ while [[ "$1" ]]; do
 	    -v|--version) sed -n -r '/^# version|^# author/p' $0 | sed -r 's/^# |author: //g' && exit 0;;
 		--nocolor) export _no_color=1;;
 		--list) _list_pkgs && exit 0;;
-		--update) _update && exit 0;;
+		--update) _update;;
 		--info) shift
 		          [[ -z "$1" ]] && {
 		            printf "%s\n" "Inform the app. More information, Example: '${0##*/} --search app_name'"
