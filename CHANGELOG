@@ -28,3 +28,6 @@
 ------------------
 # Icon to Musicalypse and sleep before copy finish down
 # version: 1.9-alpha
+------------------
+# Test 100% wget-log
+# version: 1.0.1-alpha

@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.9-alpha
+# version: 1.0.1-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -131,7 +131,7 @@ _turn_exec(){
 
 _progress(){
 z=1
-while [[ ! $(grep '99%' "wget-log") && ! $(grep 'Done' "$_tmp") ]]; do
+while [[ ! $(grep '100%' "wget-log") && ! $(grep 'Done' "$_tmp") ]]; do
 	_log=$(awk '{print $7}' "wget-log" | tail -n 2 | sed -n 1p);_log=" $_log "
 	case "$z" in
 	1) echo -en " $(_e 32 0)✌\e[m $_log\r\r";;
@@ -277,7 +277,7 @@ _app_remove(){
     [[ -f "/tmp/$1" ]] && rm "/tmp/$1" # TEMPORÁRIO
     [[ -f "${HOME}/.local/bin/app/$1" ]] && rm "${HOME}/.local/bin/app/$1" || _dont=1
     [[ -f "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png" ]] && \
-    rm "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png" || _dont=1
+    rm "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png"
     [[ -f "${HOME}/.local/share/applications/$1.desktop" ]] && rm "${HOME}/.local/share/applications/$1.desktop" || _dont=1
     [[ "$_dont" == 0 ]] && {
         printf "%s\n" "'$1' successfully removed."
