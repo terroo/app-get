@@ -1,0 +1,374 @@
+#!/usr/bin/env bash
+# vim: noai:ts=4:sw=4:expandtab
+#
+# name: app-get
+# version: 1.0-alpha
+# author: Marcos Oliveira <terminalroot.com.br>
+# describe: AppImages manager via command line
+# license: GNU GPLv3
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# TODO: https://raw.githubusercontent.com/thepinguim/images/master/icons/
+#         by: https://raw.githubusercontent.com/terroo/app-get/master/icons/
+
+shopt -s extglob
+
+_usage(){
+  cat <<EOF
+usage: ${0##*/} [options] [package]
+  
+  Options:
+    ---list            Lists all available packages
+    --nocolor          Disable colors
+    --update           Checks and updates this program
+    --info [package]   Describes data for an available package
+    --remove [package] Removes the informed package
+    -h,--help          Show this content
+    -v,--version       Show version
+
+  Example, install qbittorrent: $ ${0##*/} qbittorrent   
+EOF
+}
+
+_in="${HOME}/.config/app-get/apps.list"
+_in_lines=$(wc -l ${_in} | awk '{ print $1 }')
+_tmp=$(mktemp)
+_no_color=0
+
+[[ $(pidof wget) ]] && kill -9 $(pidof wget)
+[[ -f "wget-log" ]] && rm "wget-log"
+
+_e(){
+    [[ "$_no_color" == 0 ]] && {
+        [[ -z "$3" ]] && _bold=1 || _bold=0 
+        [[ "$2" -eq 0 ]] && echo -e "\e[${1};${_bold}m" || echo -e "\e[m"
+    } || {
+        [[ -z "$3" ]] && _bold=1 || _bold=0 
+        [[ "$2" -eq 0 ]] && echo -e "\e[99;0m" || echo -e "\e[m"
+    }
+    
+}
+
+_ctrl_c(){
+    echo -e "\e[m"
+    echo "Canceling/Exiting ..."
+    setterm -cursor on
+    exit 127
+}
+
+trap _ctrl_c SIGINT SIGTERM
+
+# This function is not yet being used in this program, but maybe in the future
+_is_hash(){
+  _this_hash=$(sed -n "/$1/p" "$_in" | awk '{ print $9 }')
+  if [[ $(md5sum /tmp/"$1" | awk '{print $1 }') == "$_this_hash" ]]; then
+    _image "$1"
+    _turn_exec "$1"
+  else
+    read -p "This package has not been verified. Do you want to proceed without validating the package? [Y/n]: "
+    [[ "${REPLY}" != @(S|s) ]] && {
+      exit $(( $# ? 0 : 1 ))
+    }
+  fi
+}
+
+_is_arch(){
+  [[ "$(sed -n "/$1/p" "$_in" | awk '{ print $5 }')" != "$(getconf LONG_BIT)" ]] && {
+    printf "%s\n" "Unsupported architecture."
+    exit 1
+  }
+}
+
+_is_installed(){
+  which "$1" >&- 2>&-
+  [[ "$?" == 0 ]] && {
+    printf "%s\n"  "$1 is already installed. Use --remove and reinstall."
+    exit 0
+  }  
+}
+
+_desktop(){
+    _name="$(sed -n "/$1/p" "$_in" | awk '{ print $2 }')"
+    _icon="$(sed -n "/$1/p" "$_in" | awk '{ print $1 }')"
+    _cat="$(sed -n "/$1/p" "$_in" | awk '{ print $3 }')"
+    [[ $(echo $_cat | grep 'Terminal') ]] && _term='true' || _term='false'
+    echo "[Desktop Entry]
+Name=$_name
+Icon=${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-${_icon}.png
+Type=Application
+Categories=GNOME;GTK;${_cat};
+Exec=$HOME/.local/bin/app/$1
+StartupNotify=false
+Terminal=${_term}" > "${HOME}/.local/share/applications/$1.desktop"
+chmod + "${HOME}/.local/share/applications/$1.desktop"
+}
+
+_image(){
+  [[ "$(sed -n "/$1/p" "$_in" | awk '{ print $8 }')" != "true" ]] && {
+      _url_image="https://raw.githubusercontent.com/thepinguim/images/master/icons/$1.png"
+      [[ ! -d "${HOME}/.local/share/icons/hicolor/256x256/apps" ]] && mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps
+      wget -q $_url_image -O "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png"
+      _desktop "$1"
+  } 
+}
+
+_turn_exec(){
+  [[ ! -d "${HOME}/.local/bin/app" ]] && mkdir -p ${HOME}/.local/bin/app
+  cp /tmp/"$1" ${HOME}/.local/bin/app/
+  chmod +x "${HOME}/.local/bin/app/$1"
+}
+
+_progress(){
+z=1
+while [[ ! $(grep '99%' "wget-log") && ! $(grep 'Done' "$_tmp") ]]; do
+	_log=$(awk '{print $7}' "wget-log" | tail -n 2 | sed -n 1p);_log=" $_log "
+	case "$z" in
+	1) echo -en " $(_e 32 0)✌\e[m $_log\r\r";;
+	2) echo -en " $(_e 33 0)☝\e[m $_log\r\r";;
+	3) echo -en " $(_e 34 0)👍\e[m $_log\r\r";;
+	4) echo -en " $(_e 35 0)👌\e[m $_log\r\r";;
+	esac
+	if [[ "$z" == "4" ]]; then
+	    sleep 0.1
+	    z=1
+	else
+	    sleep 0.1
+	    let z=z+1
+	fi
+done
+echo "Done" > $_tmp
+}
+
+_down_pkg(){
+
+  echo -en "         👉 Getting the App " "\r"
+  setterm -cursor off
+  
+  while	    
+	    [[ ! $(grep 'Done' "$_tmp") ]] && wget -c -b $2 -O /tmp/"$1" | sed -r '/Continuando|escrita|Continuing|writing\
+	    |escribiendo|Continua|scrittura|Kontynuacja|pisania|Продолжая|писать|Weiter|schreiben|繼續|寫作|続ける|書く|Fortsætter|skrivning\
+	    |Doorgaan|schrijven|继续|写作|Continuer|écrire|Nastavak|pisanja/d'
+	do
+	    _progress
+  done
+  setterm -cursor on
+}
+
+_is_path(){
+  _cam="${HOME}/.local/bin/app"
+  echo $PATH | grep -q "$_cam"
+  [[ "$?" != 0 ]] && {
+    'export PATH="${PATH}:${HOME}/.local/bin/app"' >> ${HOME}/.bashrc
+  }
+  source ${HOME}/.bashrc
+}
+
+_app_get_install(){
+    _pkg=$(sed -n "/^${1} /p" "$_in")
+    _only_pkg=$(echo $_pkg | awk '{print $1}')
+    _url=$(echo $_pkg | awk '{print $6}')
+    _is_arch "$_only_pkg"
+    _is_installed "$_only_pkg"
+    _down_pkg "$_only_pkg" "$_url"
+    _image "$_only_pkg"
+    _turn_exec "$_only_pkg"
+    _is_path
+    printf "%s\n" " $(_e 32 0 1)✔$(_e 99 1) ${1} has been successfully installed!"
+    exit 0
+}
+
+_num(){
+  a=" "
+  for i in $(seq 1 $1); do
+    a="$a "
+  done
+  printf "%s" "$a"
+}
+
+_list_pkgs(){
+  printf "%s" "┌"
+  for i in {1..130}; do 
+    if [[ $(echo $(( ${i} % 30 )) ) == 0 ]]; then
+      printf "%s" "┬"
+    else
+      printf "%s" "─"
+    fi
+  done
+  printf "%s" "┐"
+  _line=1
+  while read LINHA; do
+    _a=$(echo $LINHA | awk '{ print $1 }')
+    num=$(expr length "$_a");num=$(echo $(( 30-${num}-4 )) )
+    printf "\n%s" "│ $(_e 36 0)$_a$(_e 99 1) $(_num $num)│ "
+
+    _b=$(echo $LINHA | awk '{ print $3 }')
+    num=$(expr length "$_b");num=$(echo $(( 30-${num}-4 )) )
+    printf "%s" "$(_e 33 0)$_b$(_e 99 1) $(_num $num)│ "
+
+    _c=$(echo $LINHA | awk '{ print $2 }')
+    num=$(expr length "$_c");num=$(echo $(( 30-${num}-4 )) )
+    printf "%s" "$(_e 34 0)$_c$(_e 99 1) $(_num $num)│ "
+
+    _d=$(echo $LINHA | awk '{ print $4 }')
+    _d="$_d $(echo $LINHA | awk '{ print $5 }')-bit"
+    num=$(expr length "$_d");num=$(echo $(( 30-${num}-4 )) )
+    printf "%s" "$(_e 35 0)$_d$(_e 99 1) $(_num $num)│ "
+
+    _e=$(which $_a >&- 2>&-)
+    [[ "$?" == 0 ]] && _e="   $(_e 32 0)✔$(_e 99 1)     " || _e="   $(_e 31 0)✖$(_e 99 1)     "
+    num=$(expr length "$_e");num=$(echo $(( 30-${num}-4 )) )
+    printf "%s" "$_e│"
+
+    let _line=_line+1
+
+    if [[ "$_line" > 1 && "$_line" -le "$_in_lines" ]]; then
+      printf "\n%s" "├"
+      for i in {1..130}; do 
+        if [[ $(echo $(( ${i} % 30 )) ) == 0 ]]; then
+          printf "%s" "┼"
+        else
+          printf "%s" "─"
+        fi
+      done
+      printf "%s" "┤"
+    fi
+
+  done < "$_in"
+  echo
+
+  printf "%s" "└"
+  for i in {1..130}; do 
+    if [[ $(echo $(( ${i} % 30 )) ) == 0 ]]; then
+      printf "%s" "┴"
+    else
+      printf "%s" "─"
+    fi
+  done
+  printf "%s\n" "┘"
+
+}
+
+_app_remove(){
+    _dont=0
+    [[ $(pidof wget) ]] && _pid=$(pidof wget) && kill -9 $_pid # TEMPORÁRIO
+    [[ -f "/tmp/$1" ]] && rm "/tmp/$1" # TEMPORÁRIO
+    [[ -f "${HOME}/.local/bin/app/$1" ]] && rm "${HOME}/.local/bin/app/$1" || _dont=1
+    [[ -f "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png" ]] && \
+    rm "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png" || _dont=1
+    [[ -f "${HOME}/.local/share/applications/$1.desktop" ]] && rm "${HOME}/.local/share/applications/$1.desktop" || _dont=1
+    [[ "$_dont" == 0 ]] && {
+        printf "%s\n" "'$1' successfully removed."
+        exit 0
+    } || {
+        printf "%s\n" "'$1' is not installed."
+        exit 1
+    }
+}
+
+_search_desc_app(){
+    [[ $(egrep -i "$1 " "${_in}") ]] && {
+        _info=$(egrep -i "$1 " "${_in}")
+        _name=$(echo $_info | awk '{print $2}')
+        _url=$(echo $_info | awk '{print $7}')
+        _arch=$(echo $_info | awk '{print $5}')
+        _version=$(echo $_info | awk '{print $4}')
+        _cat=$(echo $_info | awk '{print $3}')
+        which "$1" >&- 2>&- && _ins="Yes" || _ins="No"
+        cat <<EOF
+        
+ Name        : ${_name}
+ Website     : ${_url}
+ Architecture: ${_arch}-bit
+ Version     : ${_version}
+ Category    : ${_cat}
+ Installed   : ${_ins}
+        
+EOF
+    } || {
+        _new=$(echo "$1" | cut -c 1-3)
+        while read _line; do
+            _name=$(echo $_line | awk '{print $2}')
+            _url=$(echo $_line | awk '{print $7}')
+            _arch=$(echo $_line | awk '{print $5}')
+            _version=$(echo $_line | awk '{print $4}')
+            _cat=$(echo $_line | awk '{print $3}')
+            _ini=$(echo $_line | awk '{print $1}')
+            which "${_ini}" >&- 2>&- && _ins="Yes" || _ins="No"
+
+        cat <<EOF
+
+ Name        : ${_name}
+ Website     : ${_url}
+ Architecture: ${_arch}-bit
+ Version     : ${_version}
+ Category    : ${_cat}
+ Installed   : ${_ins}
+        
+EOF
+            
+        done < <(egrep -i "$_new" "${_in}")
+    }
+}
+
+_update(){
+    wget -q "https://raw.githubusercontent.com/terroo/app-get/master/CHANGELOG" -O "/tmp/up_app_get"
+    [[ $(sed -n '/^# version/p' $0) != $(tail -n 1 "/tmp/up_app_get") ]] && {
+        cat <<EOF
+A new version is available! To update, run:
+$ git clone https://github.com/terroo/app-get up-app-get
+$ cd up-app-get && make install
+$ cd .. && rm -rf up-app-get/
+EOF
+    }
+    
+}
+
+[[ -z "$1" ]] && _usage && exit 0
+while [[ "$1" ]]; do
+	case "$1" in
+	    -h|--help) _usage && exit 0;;
+	    -v|--version) sed -n -r '/^# version|^# author/p' $0 | sed -r 's/^# |author: //g' && exit 0;;
+		--nocolor) export _no_color=1;;
+		--list) _list_pkgs && exit 0;;
+		--update) _update && exit 0;;
+		--info) shift
+		          [[ -z "$1" ]] && {
+		            printf "%s\n" "Inform the app. More information, Example: '${0##*/} --search app_name'"
+		          } || {
+		            _search_desc_app "$1"
+		          }
+		;;
+		--remove) shift
+		          [[ -z "$1" ]] && {
+		            printf "%s\n" "Inform the app. For more information, use: '${0##*/} --help'"
+		          } || {
+		            _app_remove "$1"
+		          }
+		;;
+		        	
+		*) if [[ $(egrep "^$1 " "${_in}") ]]; then
+		       _app_get_install $1
+		   elif [[ $(echo "$1" | egrep "^-") ]]; then
+		        printf "%s\n" "Invalid option. For more information, use: '${0##*/} --help'"
+		        exit 1
+		   else
+		        printf "%s\n" "Invalid package. For more information, use: '${0##*/} --help'"
+		        exit 1
+		   fi		
+		;;
+	esac
+	shift
+done
+

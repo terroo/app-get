@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Installer to app-get
+[[ "$1" == "remove" ]] && {
+    rm ${HOME}/.local/bin/app-get
+    rm -rf ${HOME}/.config/app-get
+    sed -i '/\.local\/bin/d' "${HOME}/.bashrc"
+    sed -i '/\.local\/bin\/app/d' "${HOME}/.bashrc"
+    printf "%s\n" "app-get was removed successfully."
+    exit 0
+} || {
+    [[ ! -d "${HOME}/.local/bin" ]] && mkdir -p "${HOME}/.local/bin"
+    [[ ! -d "${HOME}/.config/app-get" ]] && mkdir -p "${HOME}/.config/app-get"
+    cp src/app-get "${HOME}/.local/bin/app-get"
+    cp lib/apps.list "${HOME}/.config/app-get/"
+    chmod +x ${HOME}/.local/bin/app-get
+    egrep -q '\.local\/bin' "${HOME}/.bashrc" || echo 'export PATH="${PATH}:${HOME}/.local/bin"' >> "${HOME}/.bashrc"
+    egrep -q '\.local\/bin\/app' "${HOME}/.bashrc" || echo 'export PATH="${PATH}:${HOME}/.local/bin/app"' >> "${HOME}/.bashrc"
+    printf "%s\n" "app-get was successfully installed."
+    exit 0
+}
