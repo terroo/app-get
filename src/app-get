@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.3-alpha
+# version: 1.4-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -323,8 +323,10 @@ EOF
 _update(){
     wget -q "https://raw.githubusercontent.com/terroo/app-get/master/CHANGELOG" -O "/tmp/up_app_get"
     _tv=$(sed -n '/^# version/p' $0 | sed 's/.*: //g')
+    _tv=$(echo ${_tv} | tr -d '.a-z\-')
     _nv=$(tail -n 1 "/tmp/up_app_get" | sed 's/.*: //g')
-    [[ $(sed -n '/^# version/p' $0) != $(tail -n 1 "/tmp/up_app_get") ]] && {
+    _nv=$(echo ${_nv} | tr -d '.a-z\-')
+    [[ "${_tv}" -lt "${_nv}" ]] && {
         printf "%s\n" "A new version is available!"
         printf "%s\n" "Its version is $(_e 31 0)${_tv}$(_e 99 1), the new version is $(_e 32 0)${_nv}$(_e 99 1) ."
         read -p "Do you want to update now? [Y/n]: "
