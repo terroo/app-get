@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.0.1-alpha
+# version: 1.0.2-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -152,6 +152,9 @@ echo "Done" > $_tmp
 
 _down_pkg(){
 
+  if [[ -f "wget-log" ]]; then
+        [[ $(grep '100%' wget-log) ]] && rm wget-log
+  fi
   echo -en "         👉 Getting the App " "\r"
   setterm -cursor off
   if [[ -f "/tmp/${1}" ]]; then
@@ -305,6 +308,7 @@ _search_desc_app(){
  Version     : ${_version}
  Category    : ${_cat}
  Installed   : ${_ins}
+ Package     : ${1}
         
 EOF
     } || {
@@ -326,6 +330,7 @@ EOF
  Version     : ${_version}
  Category    : ${_cat}
  Installed   : ${_ins}
+ Package     : ${_ini}
         
 EOF
             

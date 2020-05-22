@@ -31,3 +31,6 @@
 ------------------
 # Test 100% wget-log
 # version: 1.0.1-alpha
+------------------
+# Add package name to --info and add check file 100% wget-log for rm
+# version: 1.0.2-alpha
