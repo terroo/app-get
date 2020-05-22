@@ -22,3 +22,6 @@
 ------------------
 # Fix Musicalypse down to 1.0.0 → 0.5.2 and turn all false
 # version: 1.7-alpha
+------------------
+# Return Musicalypse down to 0.5.2 → 1.0.0
+# version: 1.8-alpha
