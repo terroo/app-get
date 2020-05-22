@@ -333,8 +333,7 @@ _update(){
             git clone https://github.com/terroo/app-get /tmp/up-app-get
             cd /tmp/up-app-get
             bash INSTALL
-            cd -
-            printf "%s\n" "Successfully updated. Run: source ~/.bashrc"
+            printf "%s\n" "Successfully updated!"
             exit 0
         }
     } || {
