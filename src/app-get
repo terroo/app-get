@@ -344,7 +344,7 @@ _update(){
     _tv=$(echo ${_tv1} | tr -d '.a-z\-')
     _nv1=$(tail -n 1 "/tmp/up_app_get" | sed 's/.*: //g')
     _nv=$(echo ${_nv1} | tr -d '.a-z\-')
-    if [[ "${_tv}" -lt "${_nv}" ]]; then
+    if [[ "${_nv}" -lt "${_tv}" ]]; then
         printf "%s\n" "A new version is available!"
         printf "%s\n" "Its version is $(_e 31 0)${_tv1}$(_e 99 1), the new version is $(_e 32 0)${_nv1}$(_e 99 1) ."
         read -p "Do you want to update now? [Y/n]: "
