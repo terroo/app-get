@@ -29,17 +29,3 @@
 # Icon to Musicalypse and sleep before copy finish down
 # version: 1.9-alpha
 ------------------
-# Test 100% wget-log
-# version: 1.0.1-alpha
-------------------
-# Add package name to --info and add check file 100% wget-log for rm
-# version: 1.0.2-alpha
-------------------
-# Add fix glob to search
-# version: 1.0.3-alpha
-------------------
-# Change 'The App' to 'App_name → ${1}'
-# version: 1.0.4-alpha
-------------------
-# Update help , list with 3 slashes
-# version: 1.0.5-alpha
