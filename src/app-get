@@ -339,6 +339,7 @@ EOF
 }
 
 _update(){
+    [[ -f "/tmp/up_app_get" ]] && rm "/tmp/up_app_get"
     wget -q "https://raw.githubusercontent.com/terroo/app-get/master/CHANGELOG" -O "/tmp/up_app_get"
     _tv1=$(sed -n '/^# version/p' $0 | sed 's/.*: //g')
     _tv=$(echo ${_tv1} | tr -d '.a-z\-')
