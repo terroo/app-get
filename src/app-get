@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.0.2-alpha
+# version: 1.0.3-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -292,13 +292,14 @@ _app_remove(){
 }
 
 _search_desc_app(){
-    [[ $(egrep -i "$1 " "${_in}") ]] && {
+    [[ $(egrep "^$1 " "${_in}" 2>/dev/null) ]] && {
         _info=$(egrep -i "$1 " "${_in}")
         _name=$(echo $_info | awk '{print $2}')
         _url=$(echo $_info | awk '{print $7}')
         _arch=$(echo $_info | awk '{print $5}')
         _version=$(echo $_info | awk '{print $4}')
         _cat=$(echo $_info | awk '{print $3}')
+        _ini=$(echo $_info | awk '{print $1}')
         which "$1" >&- 2>&- && _ins="Yes" || _ins="No"
         cat <<EOF
         
@@ -308,7 +309,7 @@ _search_desc_app(){
  Version     : ${_version}
  Category    : ${_cat}
  Installed   : ${_ins}
- Package     : ${1}
+ Package     : ${_ini}
         
 EOF
     } || {
@@ -385,14 +386,16 @@ while [[ "$1" ]]; do
 		          }
 		;;
 		        	
-		*) if [[ $(egrep "^$1 " "${_in}") ]]; then
+		*) if [[ $(egrep "^$1 " "${_in}" 2>/dev/null) ]]; then
 		       _app_get_install $1
-		   elif [[ $(echo "$1" | egrep "^-") ]]; then
+		   elif [[ $(echo "$1" | egrep "^-" 2>/dev/null) ]]; then
 		        printf "%s\n" "Invalid option. For more information, use: '${0##*/} --help'"
 		        exit 1
 		   else
-		        printf "%s\n" "Invalid package. For more information, use: '${0##*/} --help'"
-		        exit 1
+		        [[ "${1}" != '*' ]] && {
+		            printf "%s\n" "Invalid package. For more information, use: '${0##*/} --help'"
+		            exit 1
+		        }
 		   fi		
 		;;
 	esac
