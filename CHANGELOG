@@ -37,3 +37,6 @@
 ------------------
 # Add fix glob to search
 # version: 1.0.3-alpha
+------------------
+# Change 'The App' to 'App_name → ${1}'
+# version: 1.0.4-alpha
