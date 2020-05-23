@@ -40,3 +40,6 @@
 ------------------
 # Change 'The App' to 'App_name → ${1}'
 # version: 1.0.4-alpha
+------------------
+# Update help , list with 3 slashes
+# version: 1.0.5-alpha

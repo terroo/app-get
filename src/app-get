@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.0.4-alpha
+# version: 1.0.5-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -28,7 +28,7 @@ _usage(){
 usage: ${0##*/} [options] [package]
   
   Options:
-    ---list            Lists all available packages
+    --list             Lists all available packages
     --nocolor          Disable colors
     --update           Checks and updates this program
     --info [package]   Describes data for an available package
