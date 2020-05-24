@@ -31,3 +31,6 @@
 ------------------
 # New version for test
 # version: 1.1.1-alpha
+------------------
+# Correct --search and Readme Architecture
+# version: 1.1.2-alpha

@@ -38,9 +38,9 @@ vim up-app-get/lib/apps.list
 ```
 4. This file has data separated by spaces per line. And each field has a certain information:
 
-| command | name | category | version | AppImage link | website | icon/.desktop automatic
-|---|---|---|---|---|---|---|
-| application command | name (usually with capital letters) | Category based on .desktop | Program version | AppImage link, use only the official project link, preferably from a Git repository | Inform the official website of the program | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
+| command | name | category | version | Architecture | AppImage link | website | icon/.desktop automatic
+|---|---|---|---|---|---|---|---|
+| application command | name (usually with capital letters) | Category based on .desktop | Program version | 64 or 32 | AppImage link, use only the official project link, preferably from a Git repository | Inform the official website of the program | If when you run AppImage for the first time and it opens a box asking if you want to create the .desktop and the icon automatically, check `true`, but after testing it on your machine, it does not generate and is not automatically available from Dash your system, check `false` |
 
 Example for the `FooBar` program:
 ```sh
