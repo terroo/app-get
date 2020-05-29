@@ -10,3 +10,5 @@ olive Olive Utility;Video;Graphics 1.0 64 https://git.io/oliveapp https://www.ol
 opera Opera WebBrowser 1.0 64 https://git.io/operaapp https://www.opera.com/ false
 qbittorrent qBitTorrent Utility;Torrent 4.2.1.10 64 https://git.io/qbtp2p https://www.qbittorrent.org/ false
 upterm UpTerm Terminal 0.4.3 64 https://git.io/upterm https://github.com/railsware/upterm false
+onlyoffice OnlyOffice Office 5.5.1 64 https://bit.ly/onlyofficeapp https://www.onlyoffice.com/ false 
+libreoffice LibreOffice Office 6.4.3.2 64 https://bit.ly/libreofficeapp https://www.libreoffice.org false
