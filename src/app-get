@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.1.7-alpha
+# version: 1.1.8-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -410,7 +410,7 @@ while [[ "$1" ]]; do
 		          } || {
 		            _remove_dup "$1"
 		          }
-		        	
+        ;;        	
 		*) if [[ $(egrep "^$1 " "${_in}" 2>/dev/null) ]]; then
 		       _app_get_install $1
 		   elif [[ $(echo "$1" | egrep "^-" 2>/dev/null) ]]; then
