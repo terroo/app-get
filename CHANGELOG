@@ -46,3 +46,10 @@
 ------------------
 # Fix link Hyper Terminal
 # version: 1.1.6-alpha
+------------------
+# Create option: --rmd
+# The '--rmd' option removes only the Dash icon, 
+# usually for those applications that ask if you want to create an icon and you answer Yes, 
+# so you usually have two entries in the Dash. 
+# With this option you only keep the application's own 
+# version: 1.1.7-alpha

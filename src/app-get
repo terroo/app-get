@@ -2,7 +2,7 @@
 # vim: noai:ts=4:sw=4:expandtab
 #
 # name: app-get
-# version: 1.1.6-alpha
+# version: 1.1.7-alpha
 # author: Marcos Oliveira <terminalroot.com.br>
 # describe: AppImages manager via command line
 # license: GNU GPLv3
@@ -33,10 +33,12 @@ usage: ${0##*/} [options] [package]
     --update           Checks and updates this program
     --info [package]   Describes data for an available package
     --remove [package] Removes the informed package
+    --rmd [package]    Removes duplicate entries in the Dash
     -h,--help          Show this content
     -v,--version       Show version
 
-  Example, install qbittorrent: $ ${0##*/} qbittorrent   
+* Example, install qbittorrent: $ ${0##*/} qbittorrent
+** The '--rmd' option removes only the Dash icon, usually for those applications that ask if you want to create an icon and you answer Yes, so you usually have two entries in the Dash. With this option you only keep the application's own  
 EOF
 }
 
@@ -290,6 +292,22 @@ _app_remove(){
     }
 }
 
+_remove_dup(){
+    _dont=0
+    [[ $(pidof wget) ]] && _pid=$(pidof wget) && kill -9 $_pid # TEMPORÁRIO
+    [[ -f "/tmp/$1" ]] && rm "/tmp/$1" # TEMPORÁRIO
+    [[ -f "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png" ]] && \
+    rm "${HOME}/.local/share/icons/hicolor/256x256/apps/appimagekit-$1.png"
+    [[ -f "${HOME}/.local/share/applications/$1.desktop" ]] && rm "${HOME}/.local/share/applications/$1.desktop" || _dont=1
+    [[ "$_dont" == 0 ]] && {
+        printf "%s\n" "The duplicate entry for '$1' has been successfully removed."
+        exit 0
+    } || {
+        printf "%s\n" "'$1' is not installed or does not have duplicate entry."
+        exit 1
+    }
+}
+
 _search_desc_app(){
     [[ $(egrep "^$1 " "${_in}" 2>/dev/null) ]] && {
         _info=$(egrep -i "$1 " "${_in}")
@@ -385,6 +403,13 @@ while [[ "$1" ]]; do
 		            _app_remove "$1"
 		          }
 		;;
+		
+		--rmd) shift
+		          [[ -z "$1" ]] && {
+		            printf "%s\n" "Inform the app. For more information, use: '${0##*/} --help'"
+		          } || {
+		            _remove_dup "$1"
+		          }
 		        	
 		*) if [[ $(egrep "^$1 " "${_in}" 2>/dev/null) ]]; then
 		       _app_get_install $1
