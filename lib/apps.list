@@ -14,3 +14,4 @@ onlyoffice OnlyOffice Office 5.5.1 64 https://bit.ly/onlyofficeapp https://www.o
 libreoffice LibreOffice Office 6.4.3.2 64 https://bit.ly/libreofficeapp https://www.libreoffice.org false
 audacity Audacity Audio 2.1.2 64 https://bit.ly/audacity9 https://www.audacityteam.org/ false
 hyper Hyper Terminal 3.0.2 64 https://git.io/hyperappd https://hyper.is/ false
+sqlitestudio SQLiteStudio Development;Database;Utility 3.2.1 64 https://apprepo.de/appimage/download/sqlite-studio https://sqlitestudio.pl/ false
