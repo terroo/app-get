@@ -59,3 +59,6 @@
 ------------------
 # Add SQLiteStudio
 # version: 1.1.9-alpha
+------------------
+# Fix desc sqlite
+# version: 1.2.0-alpha
