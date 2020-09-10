@@ -62,3 +62,6 @@
 ------------------
 # Fix desc sqlite
 # version: 1.2.0-alpha
+------------------
+# Add calibre
+# version: 1.2.1
