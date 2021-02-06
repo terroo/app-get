@@ -361,7 +361,7 @@ _update(){
     wget -q "https://raw.githubusercontent.com/terroo/app-get/master/CHANGELOG" -O "/tmp/up_app_get"
     _tv1=$(sed -n '/^# version/p' $0 | sed 's/.*: //g')
     _tv=$(echo ${_tv1} | tr -d '.a-z\-')
-    _nv1=$(tail -n 1 "/tmp/up_app_get" | sed 's/.*: //g')
+    _nv1=$(tail -n 1 "/tmp/up_app_get/CHANGELOG" | sed 's/.*: //g')
     _nv=$(echo ${_nv1} | tr -d '.a-z\-')
     if [[ "${_tv}" -lt "${_nv}" ]]; then
         printf "%s\n" "A new version is available!"
