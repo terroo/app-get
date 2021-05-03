@@ -22,3 +22,4 @@ emacs Emacs Utility;TextEditor 27.1 64 https://git.io/emacsapp https://www.gnu.o
 geany Geany Utility;TextEditor 1.24 64 https://cutt.ly/RhmF6zT https://www.geany.org/ 
 terminal-finances TerminalFinances Utility;Qt 1.0.0 64 https://git.io/tfinances https://terminalroot.com.br
 codeblocks Code::Blocks IDE;TextEditor 16.01 https://codeblocks.org https://apprepo.de/appimage/download/codeblocks
+vieb Vieb WebBrowser 4.5.1 64 https://git.io/viebapp https://vieb.dev/ false
