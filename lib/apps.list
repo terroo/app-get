@@ -21,6 +21,6 @@ moviemonad MovieMonad Graphics;Video 0.0.7 64 https://git.io/moviemonad https://
 emacs Emacs Utility;TextEditor 27.1 64 https://git.io/emacsapp https://www.gnu.org/software/emacs/ false
 geany Geany Utility;TextEditor 1.24 64 https://cutt.ly/RhmF6zT https://www.geany.org/ false
 terminal-finances TerminalFinances Utility;Qt 1.0.0 64 https://git.io/tfinances https://terminalroot.com.br false
-codeblocks Code::Blocks IDE;TextEditor 16.01 https://codeblocks.org https://apprepo.de/appimage/download/codeblocks false
+codeblocks Code::Blocks IDE;TextEditor 16.01 64 https://codeblocks.org https://apprepo.de/appimage/download/codeblocks false
 vieb Vieb WebBrowser 4.5.1 64 https://git.io/viebapp https://vieb.dev/ false
 lmms LMMS Audio 1.2.1 64 https://git.io/llmsapp https://llms.io false
