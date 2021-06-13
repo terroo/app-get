@@ -185,7 +185,7 @@ _is_path(){
   _cam="${HOME}/.local/bin/app"
   echo $PATH | grep -q "$_cam"
   [[ "$?" != 0 ]] && {
-    'export PATH="${PATH}:${HOME}/.local/bin/app"' >> ${HOME}/.bashrc
+    echo 'export PATH="${PATH}:${HOME}/.local/bin/app"' >> ${HOME}/.bashrc
   }
   source ${HOME}/.bashrc
 }
